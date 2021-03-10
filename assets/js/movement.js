@@ -21,6 +21,33 @@ var _MAINNET_ENV = {
 	"lpAddress": "0xbcc5378b8bc3a305ac30501357467a824de8fe55",
 	"uniswapAddress": "0xbcc5378b8bc3a305ac30501357467a824de8fe55",
 	"etherscan": "https://etherscan.io/",
+	"cTokens": {
+		
+		"MVT": {
+			"id": "mvt",
+			"name": "MVT",
+			"index": "mvt",
+			"unit": "MVT",
+			"logo": "./assets/images/tokens/mvt_32.png",
+			"cTokenDecimals": 8,
+			"underlyingDecimals": 18,
+			"address": "0x",
+			"underlyingAddress": "0x3d46454212c61ecb7b31248047fa033120b88668"
+		},
+		
+		"weth": {
+			"id": "weth",
+			"name": "WETH",
+			"index": "weth",
+			"unit": "WETH",
+			"logo": "./assets/images/tokens/weth_32.png",
+			"cTokenDecimals": 8,
+			"underlyingDecimals": 18,
+			"address": "0x",
+			"underlyingAddress": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
+		
+		
+	}
 	
 }
 
@@ -32,7 +59,33 @@ var _GOERLI_ENV = {
 	"lpAddress": "0xc270f9d3800d308ee7a5213164650be9372ae1f9",
 	"uniswapAddress": "0x8f5702821cB454081AAfE1232b89957E19B89Cd7",
 	"etherscan": "https://goerli.etherscan.io/",
-	
+	"cTokens": {
+		
+		"MVT": {
+			"id": "mvt",
+			"name": "MVT",
+			"index": "mvt",
+			"unit": "MVT",
+			"logo": "./assets/images/tokens/mvt_32.png",
+			"cTokenDecimals": 8,
+			"underlyingDecimals": 18,
+			"address": "0x",
+			"underlyingAddress": "0xfcfc79623431ccf254f01091d4c8b2ce7722b1f1"
+		},
+		"weth": {
+			"id": "weth",
+			"name": "WETH",
+			"index": "weth",
+			"unit": "WETH",
+			"logo": "./assets/images/tokens/weth_32.png",
+			"cTokenDecimals": 8,
+			"underlyingDecimals": 18,
+			"address": "0x39cC0fbA5be15F0263c86E0ec164a2be43C0eB4B",
+			"underlyingAddress": "0x7624cbE2f83c47Fd6DE8804cD76501845062803F"
+		},
+		
+		
+	}
 }
 
 var ENV = _MAINNET_ENV;
@@ -76,18 +129,7 @@ change_environment = function(chainId){
 	return true;
 }
 
-var syncCont = function(){
-	
-	if(page!='main') return;
-	
-	ENV = _GOERLI_ENV;
-	
-	ENV.comptrollerContract = new web3.eth.Contract(comptrollerAbi, ENV.comptrollerAddress);
-	ENV.oracleContract = new web3.eth.Contract(oracleAbi, ENV.oracleAddress);
-	Object.values(ENV.cTokens).forEach(async function(cToken, index){
-		ENV.cTokens[cToken.id].contract = new web3.eth.Contract(cErc20Abi, cToken.address);
-	});
-}
+
 
 const blocksPerDay = 4 * 60 * 24;
 const daysPerYear = 365;
@@ -99,29 +141,7 @@ async function asyncForEach(array, callback) {
   }
 }
 
-var syncRate = function(){
-	
-	if(page!='main') return;
-	
-	ENV = _GOERLI_ENV;
-	
-	Object.values(ENV.cTokens).forEach(async function(cToken, index){
-	
-		var supplyRatePerBlock = await cToken.contract.methods.supplyRatePerBlock().call();
-		var borrowRatePerBlock = await cToken.contract.methods.borrowRatePerBlock().call();
-		var supplyApy = (((Math.pow((supplyRatePerBlock / mentissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100;
-		var borrowApy = (((Math.pow((borrowRatePerBlock / mentissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100;
-		
-		$(`.val_${cToken.id}_apy`).html(supplyApy.toFixed(2)+'%');
-		$(`.val_${cToken.id}_rate`).html(borrowApy.toFixed(2)+'%');
-		
-		var collateralFactorMantissa = await ENV.comptrollerContract.methods.getcollateralFactorMantissa(cToken.address).call();
-		var collateralFactor = collateralFactorMantissa / mentissa * 100;
-		
-		$(`.val_${cToken.id}_collateral_percentage`).html(collateralFactor.toFixed(0)+'%');
-		
-		
-	});
+
 	
 }
 
@@ -164,7 +184,7 @@ var syncAccount = async function(address){
 	
 	var i = 0;
 	
-	var assetsIn = await ENV.comptrollerContract.methods.getAssetsIn(address).call();
+	
 	
 	Object.values(ENV.cTokens).forEach(async function(cToken, cIndex){
 		var exchangeRateStored = await cToken.contract.methods.exchangeRateStored().call();
@@ -1029,28 +1049,10 @@ var prepare_stake = async function(){
 		return;
 	}
 	
-	var allowance = await tenCont.methods.allowance(account, ENV.genesisMiningAddress).call();
 	
 	
-	if(web3.utils.fromWei(allowance)*1<stake_amount){ //allowance not enough, ask to approve
-		
 	
-		$('.go-stake').append(' <span class="mdi mdi-loading mdi-spin"></span>').attr('onclick', '');
-		var uintmax = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
-		await tenCont.methods.approve(ENV.genesisMiningAddress, uintmax).send({from: account, gas: gasLimitApprove}, function(err, result){
-			$('.go-stake .mdi-loading').remove();
-			if (err) {
-				$.magnificPopup.close();
-				Swal.fire(
-				  'Failed',
-				  err.message,
-				  'error'
-				)
-			} else {
-				go_stake();
-			}
-		});
-	}
+	
 	
 	else{
 		go_stake();
@@ -1214,16 +1216,16 @@ var addTenToMetamask = async function(){
 	params: {
 	  type: 'ERC20', // Initially only supports ERC20, but eventually more!
 	  options: {
-		address: ENV.cTokens.ten.underlyingAddress, // The address that the token is at.
-		symbol: 'TEN', // A ticker symbol or shorthand, up to 5 chars.
+		address: ENV.cTokens.mvt.underlyingAddress, // The address that the token is at.
+		symbol: 'MVT', // A ticker symbol or shorthand, up to 5 chars.
 		decimals: 18, // The number of decimals in the token
-		image: 'http://movement.finance/assets/images/tokens/ten_32.png', // A string url of the token logo
+		image: 'http://movement.finance/assets/images/tokens/mvt_32.png', // A string url of the token logo
 	  },
 	},
 	});
 }
 
-var getTenMvtPrices = async function(){
+var getETHMvtPrices = async function(){
 	let data = await fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2', {
 	  method: 'POST',
 	  headers: {
@@ -1231,7 +1233,7 @@ var getTenMvtPrices = async function(){
 		'Accept': 'application/json',
 	  },
 	  body: JSON.stringify({query: "{ \
-		  tokens(where: {id_in: [\"0x3d46454212c61ecb7b31248047fa033120b88668\", \"0xdd16ec0f66e54d453e6756713e533355989040e4\"]}) {\
+		  tokens(where: {id_in: [\"0x3d46454212c61ecb7b31248047fa033120b88668\", \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"]}) {\
 			id derivedETH symbol\
 			}\
 		  bundle(id: \"1\"){ ethPrice }	  }"})
