@@ -16,7 +16,7 @@ var uniswap_getClaimableMvt = async function(address){
 	
 	return mvtDelta;
 	
-} 
+}
 
 var init_staking = async function(){
 	
