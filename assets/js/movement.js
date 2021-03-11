@@ -1245,10 +1245,10 @@ var addTenToMetamask = async function(){
 	params: {
 	  type: 'ERC20', // Initially only supports ERC20, but eventually more!
 	  options: {
-		address: ENV.cTokens.ten.underlyingAddress, // The address that the token is at.
-		symbol: 'TEN', // A ticker symbol or shorthand, up to 5 chars.
+		address: ENV.cTokens.mvt.underlyingAddress, // The address that the token is at.
+		symbol: 'MVT', // A ticker symbol or shorthand, up to 5 chars.
 		decimals: 18, // The number of decimals in the token
-		image: 'http://movement.finance/assets/images/tokens/ten_32.png', // A string url of the token logo
+		image: 'http://movement.finance/assets/images/tokens/mvt_32.png', // A string url of the token logo
 	  },
 	},
 	});
