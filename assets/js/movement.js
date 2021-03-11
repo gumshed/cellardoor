@@ -72,17 +72,7 @@ var _GOERLI_ENV = {
 			"address": "0x",
 			"underlyingAddress": "0xfcfc79623431ccf254f01091d4c8b2ce7722b1f1"
 		},
-		"weth": {
-			"id": "weth",
-			"name": "WETH",
-			"index": "weth",
-			"unit": "WETH",
-			"logo": "./assets/images/tokens/weth_32.png",
-			"cTokenDecimals": 8,
-			"underlyingDecimals": 18,
-			"address": "0x39cC0fbA5be15F0263c86E0ec164a2be43C0eB4B",
-			"underlyingAddress": "0x7624cbE2f83c47Fd6DE8804cD76501845062803F"
-		},
+		
 		
 		
 	}
@@ -129,7 +119,18 @@ change_environment = function(chainId){
 	return true;
 }
 
-
+var syncCont = function(){
+	
+	if(page!='main') return;
+	
+	ENV = _GOERLI_ENV;
+	
+	ENV.comptrollerContract = new web3.eth.Contract(comptrollerAbi, ENV.comptrollerAddress);
+	ENV.oracleContract = new web3.eth.Contract(oracleAbi, ENV.oracleAddress);
+	Object.values(ENV.cTokens).forEach(async function(cToken, index){
+		ENV.cTokens[cToken.id].contract = new web3.eth.Contract(cErc20Abi, cToken.address);
+	});
+}
 
 const blocksPerDay = 4 * 60 * 24;
 const daysPerYear = 365;
@@ -184,7 +185,7 @@ var syncAccount = async function(address){
 	
 	var i = 0;
 	
-	
+	var assetsIn = await ENV.comptrollerContract.methods.getAssetsIn(address).call();
 	
 	Object.values(ENV.cTokens).forEach(async function(cToken, cIndex){
 		var exchangeRateStored = await cToken.contract.methods.exchangeRateStored().call();
@@ -1049,10 +1050,28 @@ var prepare_stake = async function(){
 		return;
 	}
 	
+	var allowance = await tenCont.methods.allowance(account, ENV.genesisMiningAddress).call();
 	
 	
+	if(web3.utils.fromWei(allowance)*1<stake_amount){ //allowance not enough, ask to approve
+		
 	
-	
+		$('.go-stake').append(' <span class="mdi mdi-loading mdi-spin"></span>').attr('onclick', '');
+		var uintmax = "115792089237316195423570985008687907853269984665640564039457584007913129639935";
+		await tenCont.methods.approve(ENV.genesisMiningAddress, uintmax).send({from: account, gas: gasLimitApprove}, function(err, result){
+			$('.go-stake .mdi-loading').remove();
+			if (err) {
+				$.magnificPopup.close();
+				Swal.fire(
+				  'Failed',
+				  err.message,
+				  'error'
+				)
+			} else {
+				go_stake();
+			}
+		});
+	}
 	
 	else{
 		go_stake();
