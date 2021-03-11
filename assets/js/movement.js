@@ -130,7 +130,29 @@ async function asyncForEach(array, callback) {
   }
 }
 
-
+var syncRate = function(){
+	
+	if(page!='main') return;
+	
+	ENV = _GOERLI_ENV;
+	
+	Object.values(ENV.cTokens).forEach(async function(cToken, index){
+	
+		var supplyRatePerBlock = await cToken.contract.methods.supplyRatePerBlock().call();
+		var borrowRatePerBlock = await cToken.contract.methods.borrowRatePerBlock().call();
+		var supplyApy = (((Math.pow((supplyRatePerBlock / mentissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100;
+		var borrowApy = (((Math.pow((borrowRatePerBlock / mentissa * blocksPerDay) + 1, daysPerYear - 1))) - 1) * 100;
+		
+		$(`.val_${cToken.id}_apy`).html(supplyApy.toFixed(2)+'%');
+		$(`.val_${cToken.id}_rate`).html(borrowApy.toFixed(2)+'%');
+		
+		var collateralFactorMantissa = await ENV.comptrollerContract.methods.getcollateralFactorMantissa(cToken.address).call();
+		var collateralFactor = collateralFactorMantissa / mentissa * 100;
+		
+		$(`.val_${cToken.id}_collateral_percentage`).html(collateralFactor.toFixed(0)+'%');
+		
+		
+	});
 	
 }
 
@@ -1223,10 +1245,10 @@ var addTenToMetamask = async function(){
 	params: {
 	  type: 'ERC20', // Initially only supports ERC20, but eventually more!
 	  options: {
-		address: ENV.cTokens.mvt.underlyingAddress, // The address that the token is at.
-		symbol: 'MVT', // A ticker symbol or shorthand, up to 5 chars.
+		address: ENV.cTokens.ten.underlyingAddress, // The address that the token is at.
+		symbol: 'TEN', // A ticker symbol or shorthand, up to 5 chars.
 		decimals: 18, // The number of decimals in the token
-		image: 'http://movement.finance/assets/images/tokens/mvt_32.png', // A string url of the token logo
+		image: 'http://movement.finance/assets/images/tokens/ten_32.png', // A string url of the token logo
 	  },
 	},
 	});
