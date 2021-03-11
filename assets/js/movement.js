@@ -35,17 +35,6 @@ var _MAINNET_ENV = {
 			"underlyingAddress": "0x3d46454212c61ecb7b31248047fa033120b88668"
 		},
 		
-		"weth": {
-			"id": "weth",
-			"name": "WETH",
-			"index": "weth",
-			"unit": "WETH",
-			"logo": "./assets/images/tokens/weth_32.png",
-			"cTokenDecimals": 8,
-			"underlyingDecimals": 18,
-			"address": "0x",
-			"underlyingAddress": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"
-		
 		
 	}
 	
@@ -72,7 +61,6 @@ var _GOERLI_ENV = {
 			"address": "0x",
 			"underlyingAddress": "0xfcfc79623431ccf254f01091d4c8b2ce7722b1f1"
 		},
-		
 		
 		
 	}
@@ -1244,7 +1232,7 @@ var addTenToMetamask = async function(){
 	});
 }
 
-var getETHMvtPrices = async function(){
+var getTenMvtPrices = async function(){
 	let data = await fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2', {
 	  method: 'POST',
 	  headers: {
@@ -1252,7 +1240,7 @@ var getETHMvtPrices = async function(){
 		'Accept': 'application/json',
 	  },
 	  body: JSON.stringify({query: "{ \
-		  tokens(where: {id_in: [\"0x3d46454212c61ecb7b31248047fa033120b88668\", \"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\"]}) {\
+		  tokens(where: {id_in: [\"0x3d46454212c61ecb7b31248047fa033120b88668\", \"0xdd16ec0f66e54d453e6756713e533355989040e4\"]}) {\
 			id derivedETH symbol\
 			}\
 		  bundle(id: \"1\"){ ethPrice }	  }"})
