@@ -291,7 +291,7 @@ var uniswap_go_stake = async function(){
 	}
 	
 	var mvtCont =  new web3.eth.Contract(erc20Abi, ENV.mvtAddress);
-	var lpCont =  new web3.eth.Contract(erc20Abi, ENV.cTokens.ten.underlyingAddress);
+	var lpCont =  new web3.eth.Contract(erc20Abi, ENV.lpAddress);
 	var miningCont =  new web3.eth.Contract(uniswapMiningAbi, ENV.uniswapMiningAddress);
 	
 	var stake_amount = $('#stake_amount').val();
