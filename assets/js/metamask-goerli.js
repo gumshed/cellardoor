@@ -6,7 +6,7 @@ var infura_goerli_url = 'https://goerli.infura.io/v3/'+infura_key;
  
 
 if(ethereum!== 'undefined'&& ethereum.chainId=='0x5'){
-	//var web3 = new Web3(new Web3.providers.HttpProvider(infura_goerli_url));
+	var web3 = new Web3(new Web3.providers.HttpProvider(infura_goerli_url));
 }
 else{
 	var web3 = new Web3(new Web3.providers.HttpProvider(infura_mainnet_url));
@@ -74,7 +74,7 @@ ethereum.on('accountsChanged', async (accounts) => {
 	if(eth_chainId=='0x1'||eth_chainId=='0x01'){ //mainnet
 		//~ Swal.fire(
 		  //~ 'Error',
-		  //~ 'Saving and Lending app is under development and currently only available in Goerli Testnet. Change your Metamask network to Goerli to use this app.',
+		  //~ 'Saving app is under development and currently only available in Goerli Testnet. Change your Metamask network to Goerli to use this app.',
 		  //~ 'error'
 		//~ );
 		return;
