@@ -496,11 +496,11 @@ var getEthMvtPrices = async function(){
 
 
 $(function(){
-	if(page=='staking'){
-		init_staking();
+	if(page=='staking2'){
+		init_staking2();
 
 		setInterval(function(){
-			init_staking();
+			init_staking2();
 		}, 60000);
 	}
 });
