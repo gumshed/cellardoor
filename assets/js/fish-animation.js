@@ -1,4 +1,4 @@
-(function($) {
+ (function($) {
 	var pluginName='fishAnimation',
 		init_arr=[],
 		tickInit=false,

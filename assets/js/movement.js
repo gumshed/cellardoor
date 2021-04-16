@@ -165,7 +165,7 @@ var addMvtToMetamask = async function(){
 
 
 
-var getTenMvtPrices = async function(){
+var getMvtPrices = async function(){
 	let data = await fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2', {
 	  method: 'POST',
 	  headers: {
@@ -173,7 +173,7 @@ var getTenMvtPrices = async function(){
 		'Accept': 'application/json',
 	  },
 	  body: JSON.stringify({query: "{ \
-		  tokens(where: {id_in: [\"0x3d46454212c61ecb7b31248047fa033120b88668\", \"0xdd16ec0f66e54d453e6756713e533355989040e4\"]}) {\
+		  tokens(where: {id_in: [\"0x3d46454212c61ecb7b31248047fa033120b88668\"]}) {\
 			id derivedETH symbol\
 			}\
 		  bundle(id: \"1\"){ ethPrice }	  }"})
@@ -183,9 +183,9 @@ var getTenMvtPrices = async function(){
 	  
 	  var ethPrice = data.data.bundle.ethPrice;
 	  var mvtPrice = data.data.tokens[0].derivedETH * ethPrice;
-	  var tenPrice = data.data.tokens[1].derivedETH * ethPrice;
 	  
-	  return {MVT: mvtPrice, TEN: tenPrice};
+	  
+	  return {MVT: mvtPrice,};
 }
 
 
