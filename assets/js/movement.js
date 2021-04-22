@@ -17,11 +17,11 @@ var _MAINNET_ENV = {
 	"id": 1,
 	"mvtAddress": "0x3d46454212c61ecb7b31248047fa033120b88668",
 	"uniswapMiningAddress": "0xC7ED274D6e2A158CDBE8DA8141000AFFA11D33E5",
-	"uniswapMiningAddress2": "0xdc00239b1D593E2Cbe6f908cBa1747296C8697Ae",
+	//"uniswapMiningAddress2": "0xdc00239b1D593E2Cbe6f908cBa1747296C8697Ae",
 	"lpAddress": "0xbcc5378b8bc3a305ac30501357467a824de8fe55",
-	"lpAddress2": "0x21bd2e44c421f1d34516c8875a8e92d5912e1a05",
+	//"lpAddress2": "0x21bd2e44c421f1d34516c8875a8e92d5912e1a05",
 	"uniswapAddress": "0xbcc5378b8bc3a305ac30501357467a824de8fe55",
-	"uniswapAddress2": "0x21bd2e44c421f1d34516c8875a8e92d5912e1a05",
+	//"uniswapAddress2": "0x21bd2e44c421f1d34516c8875a8e92d5912e1a05",
 
 	"etherscan": "https://etherscan.io/",
 	
