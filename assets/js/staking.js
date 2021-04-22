@@ -1,6 +1,6 @@
 var gasLimitStakeUniswap = 500000;
 var stakes = [];
-const startMiningBlocknum = 12047302;
+const startMiningBlocknum = 4414031;
 
 var uniswap_getClaimableMvt = async function(address){
 	var stakingCont =  new web3.eth.Contract(uniswapMiningAbi, ENV.uniswapMiningAddress);
@@ -36,15 +36,15 @@ var init_staking = async function(){
 	var stakingCont =  new web3.eth.Contract(uniswapMiningAbi, ENV.uniswapMiningAddress);
 	//~ var wethCont =  new web3.eth.Contract(erc20Abi, ENV.cTokens.weth.address);
 	
-	var total_mvt_staked = await stakingCont.methods.totalStaked().call();
-	var total_mvt_staked = web3.utils.fromWei(total_stake);
+	//~ var total_mvt_staked = await stakingCont.methods.totalStaked().call();
+	//~ var total_mvt_staked = web3.utils.fromWei(total_stake);
 	
-	var total_eth_staked = await stakingCont.methods.totalStakedPower().call();
-	var total_eth_staked = web3.utils.fromWei(total_power);
+	//~ var total_eth_staked = await stakingCont.methods.totalStakedPower().call();
+	//~ var total_eth_staked = web3.utils.fromWei(total_power);
 	
 	var miningStateBlock = await stakingCont.methods.miningStateBlock().call();
 	var startMiningBlockNum = await stakingCont.methods.startMiningBlockNum().call();
-	var totalStakingBlockNum = 396000;
+	var totalStakingBlockNum = 2500000;
 	var stakingProgressPercent = ((miningStateBlock-startMiningBlockNum)/totalStakingBlockNum*100).toFixed(2);
 	
 	var stakingPercentageString = stakingProgressPercent+"%";
@@ -291,7 +291,7 @@ var uniswap_go_stake = async function(){
 	}
 	
 	var mvtCont =  new web3.eth.Contract(erc20Abi, ENV.mvtAddress);
-	var lpCont =  new web3.eth.Contract(erc20Abi, ENV.lpAddress);
+	var lpCont =  new web3.eth.Contract(erc20Abi, ENV.cTokens.ten.underlyingAddress);
 	var miningCont =  new web3.eth.Contract(uniswapMiningAbi, ENV.uniswapMiningAddress);
 	
 	var stake_amount = $('#stake_amount').val();
