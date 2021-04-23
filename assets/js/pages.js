@@ -33,5 +33,5 @@ $(function(){
 	var canvs = document.getElementById("stakeHolder");
 	canvs.width = window.innerWidth;
 	canvs.height = window.innerHeight;
-	$('#stakeHolder').fishAnimation();
+	
 });
